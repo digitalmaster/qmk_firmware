@@ -162,7 +162,95 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         rgblight_mode(1);
       }
       return false;
+
+    case KC_LEFT_ALT:
+      if (record->event.pressed) {
+        static bool tapped = false;
+        static uint16_t tap_timer = 0;
+        if (keycode == KC_LEFT_ALT) {
+          if (tapped && !timer_expired(record->event.time, tap_timer)) {
+            // The key was double tapped.
+            clear_mods();  // If needed, clear the mods.
+            layer_on(1);
+          }
+          tapped = true;
+          tap_timer = record->event.time + TAPPING_TERM;
+        } else {
+          // On an event with any other key, reset the double tap state.
+          tapped = false;
+        }
+      } else {
+        // The key was released.
+        layer_off(1);
+      }
+
+    case KC_LEFT_GUI:
+      if (record->event.pressed) {
+        static bool tapped = false;
+        static uint16_t tap_timer = 0;
+        if (keycode == KC_LEFT_GUI) {
+          if (tapped && !timer_expired(record->event.time, tap_timer)) {
+            // The key was double tapped.
+            clear_mods();  // If needed, clear the mods.
+            layer_on(1);
+          }
+          tapped = true;
+          tap_timer = record->event.time + TAPPING_TERM;
+        } else {
+          // On an event with any other key, reset the double tap state.
+          tapped = false;
+        }
+      } else {
+        // The key was released.
+        layer_off(1);
+      }
+
+    case OSM(MOD_LSFT):
+      if (record->event.pressed) {
+        static bool tapped = false;
+        static uint16_t tap_timer = 0;
+        if (keycode == OSM(MOD_LSFT)) {
+          if (tapped && !timer_expired(record->event.time, tap_timer)) {
+            // The key was double tapped.
+            layer_on(1);
+            add_mods(MOD_LSFT);
+          }
+          tapped = true;
+          tap_timer = record->event.time + TAPPING_TERM;
+          // On an event with any other key, reset the double tap state.
+        } else {
+          tapped = false;
+        }
+      } else {
+        // The key was released.
+        layer_off(1);
+        del_mods(MOD_LSFT);
+      }
+
+    case MO(1):
+      if (record->event.pressed) {
+        static bool tapped = false;
+        static uint16_t tap_timer = 0;
+        if (keycode == MO(1)) {
+          if (tapped && !timer_expired(record->event.time, tap_timer)) {
+            // The key was double tapped.
+            layer_off(1);
+            register_mods(MOD_LALT);
+          }
+          tapped = true;
+          tap_timer = record->event.time + TAPPING_TERM;
+          // On an event with any other key, reset the double tap state.
+        } else {
+          tapped = false;
+        }
+      } else {
+        // The key was released.
+        layer_off(1);
+        unregister_mods(MOD_LALT);
+      }
   }
+
+  // Process the key as usual.
   return true;
 }
 
