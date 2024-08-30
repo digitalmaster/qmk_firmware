@@ -170,7 +170,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (keycode == KC_LEFT_ALT) {
           if (tapped && !timer_expired(record->event.time, tap_timer)) {
             // The key was double tapped.
-            clear_mods();  // If needed, clear the mods.
             layer_on(1);
           }
           tapped = true;
@@ -191,7 +190,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (keycode == KC_LEFT_GUI) {
           if (tapped && !timer_expired(record->event.time, tap_timer)) {
             // The key was double tapped.
-            clear_mods();  // If needed, clear the mods.
             layer_on(1);
           }
           tapped = true;
