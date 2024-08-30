@@ -10,7 +10,7 @@ enum custom_keycodes {
   MAC_LOCK,
 };
 
-
+bool is_cmd_tab_active = false;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_voyager(
@@ -245,7 +245,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         // The key was released.
         layer_off(1);
         unregister_mods(MOD_LALT);
+
+        // Switch key was released, after starting to cmd tab
+        // Release the command key to swtich windows
+        if (is_cmd_tab_active) {
+            unregister_code(KC_LEFT_GUI);
+            is_cmd_tab_active = false;
+        }
       }
+
+    case KC_TAB:
+        if (record->event.pressed) {
+            // CMD Tab Behavior
+            // If we press tab while layer 1 is on, we want to also press command
+            if (IS_LAYER_ON(1)) {
+                if (!is_cmd_tab_active) {
+                    register_code(KC_LEFT_GUI);
+                    is_cmd_tab_active = true;
+                }
+            }
+        } else {
+            // Tab was released
+        }
   }
 
   // Process the key as usual.
